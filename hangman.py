@@ -75,26 +75,34 @@ HANGMANPICS = ['''
 print(HANGMANPICS[0] + "\nWelcome to Hangwoman!\n") 
 
 with open('word_bank.txt') as word_file:
-	hangman_words = word_file.readlines()
+  hangman_words = word_file.readlines()
 
-	secure_random = random.SystemRandom()
-	rando_word = secure_random.choice(hangman_words).strip()
-	rando_length = len(rando_word)
+  secure_random = random.SystemRandom()
+  rando_word = secure_random.choice(hangman_words).strip()
+  rando_length = len(rando_word)
+  wrong_guesses = []
+  num_wrong_guesses = 0
 
-	print "_ " * rando_length + '\n'
+  print "_ " * rando_length + '\n'
 
-	rando_word_list = list(rando_word)
-	# print _ to represent rando_word_list
-	# print rando_word_list
-
-	letter_guess = raw_input("What letter would you like to guess? ").lower()
-	if letter_guess in rando_word_list:
-		print "Yep! That letter is in there!"
-		word_display = [letter_guess if x==letter_guess else '_' for x in rando_word_list]
-		print word_display #how to print without the quotations and commas
-
-	else:
-		print HANGMANPICS[1] + "\n"
-		print "_ " * rando_length + "\n\nSorry, guess again."
-
+  rando_word_list = list(rando_word)
+  # print _ to represent rando_word_list
+  # print rando_word_list
+  while num_wrong_guesses < 8:
+    letter_guess = raw_input("What letter would you like to guess? ").lower()
+    if letter_guess in rando_word_list:
+      print "Yep! That letter is in there!"
+      word_display = [letter_guess if x==letter_guess else '_' for x in rando_word_list]
+      print word_display #how to print without the quotations and commas
+    else:
+      if letter_guess in wrong_guesses:
+        print "You've already guessed that!"
+      else:
+        wrong_guesses.append(letter_guess)
+        print wrong_guesses
+        num_wrong_guesses = len(wrong_guesses)
+        print num_wrong_guesses
+        print HANGMANPICS[num_wrong_guesses] + "\n"
+        print "_ " * rando_length + "\n\nSorry, guess again."
+  
 
