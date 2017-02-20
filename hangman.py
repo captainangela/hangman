@@ -17,6 +17,7 @@
   # prevent them from typing multiple letters at a time
 import random
 import sys
+import time
 
 HANGMANPICS = ['''
   +---+
@@ -87,8 +88,12 @@ def update_display (random_word, display, letter):
   for idx, val in enumerate(rando_word):
     if letter == val:
       display[idx] = letter
-
   return display
+
+def check_if_won(word_display):
+  if '_' not in word_display:
+    print "Wowza! You've got it!"
+    new_game()
 
 def opening_display():
   print HANGMANPICS[0] + "\n\033[5;32;40m %s \033[m\n" % "Welcome to Hangwoman!"
@@ -96,34 +101,34 @@ def opening_display():
 
 def play_hangman():
   num_wrong_guesses = 0
-  wrong_guesses = []
-  right_guesses = []
+  guesses = []
   rando_word_list = list(rando_word)
   word_display = list("_"*rando_length)
   while num_wrong_guesses < 7:
     letter_guess = raw_input("What letter would you like to guess? ").lower()
+    if letter_guess in guesses:
+      print "You've already guessed that."
+      continue
+    guesses.append(letter_guess)
     if letter_guess in rando_word_list:
-      right_guesses.append(letter_guess)
       print HANGMANPICS[num_wrong_guesses] + '\n'
       word_display = update_display(rando_word, word_display, letter_guess)
       print word_display #how to print without the quotations and commas
       print "\nYep! That letter is in there!\n"
+      check_if_won(word_display)
     elif letter_guess == 'exit':
       sys.exit()  
     elif letter_guess == rando_word:
       print "Wowza! You figured it out!"
       sys.exit()
     else:
-      if letter_guess in wrong_guesses:
-        print "You've already guessed that!"
-      else:
-        wrong_guesses.append(letter_guess)
-        #print wrong_guesses
-        num_wrong_guesses = len(wrong_guesses)
-        #print num_wrong_guesses
-        print HANGMANPICS[num_wrong_guesses] + "\n"
-        print word_display  
-        print "\n\nSorry, guess again."
+      guesses.append(letter_guess)
+      #print wrong_guesses
+      num_wrong_guesses += 1
+      #print num_wrong_guesses
+      print HANGMANPICS[num_wrong_guesses] + "\n"
+      print word_display  
+      print "\n\nSorry, guess again."
   print "Oh shucks, you've died!"
 
 def new_game():
