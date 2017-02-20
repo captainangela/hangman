@@ -5,3 +5,5 @@ discombobulated
 finagle
 gobbledygook
 rambunctious
+automagically
+brighticorn
