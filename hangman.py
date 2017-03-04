@@ -17,75 +17,17 @@
   # prevent them from typing multiple letters at a time
 import random
 import sys
-import time
-
-HANGMANPICS = ['''
-  +---+
-  |   |
-      |
-      |
-      |
-      |
-=========''', '''
-  +---+
-  |   |
-  O   |
-      |
-      |
-      |
-=========''', '''
-  +---+
-  |   |
-  O   |
-  |   |
-      |
-      |
-=========''', '''
-  +---+
-  |   |
-  O   |
- /|   |
-      |
-      |
-=========''', '''
-  +---+
-  |   |
-  O   |
- /|\  |
-      |
-      |
-=========''', '''
-  +---+
-  |   |
-  O   |
- /|\  |
- /    |
-      |
-=========''', '''
-  +---+
-  |   |
-  O   |
- /|\  |
- / \  |
-      |
-=========''', '''
-  +---+
-  |   |
- ~O~  |
- /|\  |
- / \  |
-      |
-=========''']
+import constants
 
 with open('word_bank.txt') as word_file:
   hangman_words = word_file.readlines()
 
 secure_random = random.SystemRandom()
-rando_word = secure_random.choice(hangman_words).strip()
-rando_length = len(rando_word)
+random_word = secure_random.choice(hangman_words).strip()
+random_length = len(random_word)
 
 def update_display (random_word, display, letter):
-  for idx, val in enumerate(rando_word):
+  for idx, val in enumerate(random_word):
     if letter == val:
       display[idx] = letter
   return display
@@ -96,29 +38,29 @@ def check_if_won(word_display):
     new_game()
 
 def opening_display():
-  print HANGMANPICS[0] + "\n\033[5;32;40m %s \033[m\n" % "Welcome to Hangwoman!"
-  print "_ " * rando_length + '\n'
+  print constants.HANGMANPICS[0] + "\n\033[5;32;40m %s \033[m\n" % "Welcome to Hangwoman!"
+  print "_ " * random_length + '\n'
 
 def play_hangman():
   num_wrong_guesses = 0
   guesses = []
-  rando_word_list = list(rando_word)
-  word_display = list("_"*rando_length)
+  random_word_list = list(random_word)
+  word_display = list("_"*random_length)
   while num_wrong_guesses < 7:
     letter_guess = raw_input("What letter would you like to guess? ").lower()
     if letter_guess in guesses:
       print "You've already guessed that."
       continue
     guesses.append(letter_guess)
-    if letter_guess in rando_word_list:
-      print HANGMANPICS[num_wrong_guesses] + '\n'
-      word_display = update_display(rando_word, word_display, letter_guess)
+    if letter_guess in random_word_list:
+      print constants.HANGMANPICS[num_wrong_guesses] + '\n'
+      word_display = update_display(random_word, word_display, letter_guess)
       print word_display #how to print without the quotations and commas
       print "\nYep! That letter is in there!\n"
       check_if_won(word_display)
     elif letter_guess == 'exit':
       sys.exit()  
-    elif letter_guess == rando_word:
+    elif letter_guess == random_word:
       print "Wowza! You figured it out!"
       sys.exit()
     else:
@@ -126,7 +68,7 @@ def play_hangman():
       #print wrong_guesses
       num_wrong_guesses += 1
       #print num_wrong_guesses
-      print HANGMANPICS[num_wrong_guesses] + "\n"
+      print constants.HANGMANPICS[num_wrong_guesses] + "\n"
       print word_display  
       print "\n\nSorry, guess again."
   print "Oh shucks, you've died!"
@@ -134,8 +76,8 @@ def play_hangman():
 def new_game():
   choice = raw_input("Would you like to play again? Y or N: ").lower()
   if choice == "y":
-    print HANGMANPICS[0]+ "\n\033[5;32;40m %s \033[m\n" % "Let's play again!"
-    print "_ " * rando_length + '\n'
+    print constants.HANGMANPICS[0]+ "\n\033[5;32;40m %s \033[m\n" % "Let's play again!"
+    print "_ " * random_length + '\n'
     play_hangman()
   else:
     sys.exit()
